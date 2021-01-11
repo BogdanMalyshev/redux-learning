@@ -1,6 +1,4 @@
 import "./styles.css";
-import {createStore} from './createStore'
-import {rootReducer} from './redux/rootReducer'
 
 const counter = document.getElementById("counter"),
   add = document.getElementById("add"),
@@ -9,32 +7,32 @@ const counter = document.getElementById("counter"),
   theme = document.getElementById("theme"),
   body = document.querySelector("body");
 
-const store = createStore(rootReducer, {current:0, theme:'light'});
+let state = 0;
+
+const render = () => {
+  counter.textContent = state.toString();
+};
 
 add.addEventListener('click', ()=>{
-	store.dispatch({type:'INCREMENT'})
+	state++;
+	render();
 })
 
 
 sab.addEventListener('click', ()=>{
-	store.dispatch({type:'DICREMENT'})
+	state--;
+	render();
 })
 
 
 theme.addEventListener('click', ()=>{
-	store.dispatch({type:'THEME'})
+	body.classList.toggle('dark');
 })
 
 
 async.addEventListener('click', ()=>{
-
+	setTimeout(() => {
+		state++;
+		render();
+	}, 1000);
 })
-
-
-store.subscribe(()=> {
-	const {current} = store.getState();
-
-	counter.textContent = current;
-})
-
-store.dispatch({type:'INIT '})
