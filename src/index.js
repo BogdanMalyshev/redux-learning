@@ -1,40 +1,37 @@
 import "./styles.css";
-import {createStore} from './createStore'
+import {createStore, applyMiddleware} from 'redux'
 import {rootReducer} from './redux/rootReducer'
+import {increment, decrement, async} from './redux/actions'
+import thunk from 'redux-thunk'
 
 const counter = document.getElementById("counter"),
   add = document.getElementById("add"),
   sab = document.getElementById("sub"),
-  async = document.getElementById("async"),
-  theme = document.getElementById("theme"),
-  body = document.querySelector("body");
+  asyncBtn = document.getElementById("async"),
+  theme = document.getElementById("theme");
 
-const store = createStore(rootReducer, {current:0, theme:'light'});
+const store = createStore(rootReducer, 10, applyMiddleware(thunk));
+
+window.store = store;
 
 add.addEventListener('click', ()=>{
-	store.dispatch({type:'INCREMENT'})
+	store.dispatch(increment())
 })
 
 
 sab.addEventListener('click', ()=>{
-	store.dispatch({type:'DICREMENT'})
+	store.dispatch(decrement())
 })
 
 
-theme.addEventListener('click', ()=>{
-	store.dispatch({type:'THEME'})
-})
-
-
-async.addEventListener('click', ()=>{
-
+asyncBtn.addEventListener('click', ()=>{
+	store.dispatch(async())
 })
 
 
 store.subscribe(()=> {
-	const {current} = store.getState();
-
-	counter.textContent = current;
+	const state = store.getState();
+	counter.textContent = state;
 })
 
 store.dispatch({type:'INIT '})
